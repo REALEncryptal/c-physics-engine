@@ -6,8 +6,5 @@ typedef struct AppConfig {
     const char* title;
 } AppConfig;
 
-void app_setup(
-    AppConfig config, 
-    void (*physics)(float dt), // run at a fixed timestep
-    void (*render)(void) // runs right after update
-);
+struct Simulation;
+void app_setup(AppConfig config, struct Simulation *sim);

@@ -1,12 +1,12 @@
 #include "raylib.h"
 #include "app.h"
+#include "sim/sim.h"
 
-void app_setup(
-    AppConfig config, 
-    void (*physics)(float dt), // run at a fixed timestep
-    void (*render)(void) // runs right after physics.
-) {
-    // first we init a window
+void app_setup(AppConfig config, Simulation *sim) {
+    // init the simulation
+    sim->init(&config);
+
+    // init a window
     InitWindow(config.width, config.height, config.title);
     SetTargetFPS(60);
 
@@ -19,13 +19,13 @@ void app_setup(
         accumulator += frame_time;
 
         while (accumulator >= FIXED_DT) {
-            physics(FIXED_DT);
+            sim->physics(FIXED_DT);
             accumulator -= FIXED_DT;
         }
 
         BeginDrawing();
         ClearBackground(WHITE);
-        render();
+        sim->render();
         EndDrawing();
     }
 
