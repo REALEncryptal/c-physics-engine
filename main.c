@@ -1,14 +1,12 @@
 #include "engine/app.h"
-
-void physics(float dt) {
-    (void)dt;
-}
-
-void render(void) {
-}
+#include "sim/particle.h"
 
 int main() {
+    Simulation sim = particle_sim();
+    sim.init();
+
     AppConfig config = {800, 600, "Physics Test"};
-    app_setup(config, physics, render);
+    app_setup(config, sim.physics, sim.render);
+
     return 0;
 }

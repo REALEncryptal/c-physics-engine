@@ -51,3 +51,21 @@ static inline Vec2 vec2_norm(Vec2 v) {
 static inline float vec2_dist(Vec2 a, Vec2 b) {
     return vec2_len(vec2_sub(a, b));
 }
+
+// rotate a vector by angle (radians, ccw), about the origin (0,0)
+static inline Vec2 vec2_rotate(Vec2 v, float angle) {
+    float c = cosf(angle);
+    float s = sinf(angle);
+    return vec2(v.x * c - v.y * s, v.x * s + v.y * c);
+}
+
+// world->local space (rel to origin, un-rotated)
+static inline Vec2 vec2_world_to_local(Vec2 p, Vec2 origin, float rotation) {
+    return vec2_rotate(vec2_sub(p, origin), -rotation);
+}
+
+// local->world space (rel to origin, rotated)
+static inline Vec2 vec2_local_to_world(Vec2 p, Vec2 origin, float rotation) {
+    return vec2_add(vec2_rotate(p, rotation), origin);
+}
+

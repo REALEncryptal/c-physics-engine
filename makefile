@@ -14,7 +14,18 @@ $(BIN): $(OBJ)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(OBJ) $(BIN)
+TEST_SRC = $(wildcard tests/*.c)
+TEST_BIN = $(TEST_SRC:tests/%.c=tests/%)
+TEST_CFLAGS = -Wall -Wextra -std=c99 -I src $(shell pkg-config --cflags cunit)
+TEST_LDFLAGS = $(shell pkg-config --libs cunit) -lm
 
-.PHONY: all clean
+tests/%: tests/%.c
+	$(CC) $(TEST_CFLAGS) $< -o $@ $(TEST_LDFLAGS)
+
+test: $(TEST_BIN)
+	@for t in $(TEST_BIN); do echo "=== $$t ===" && ./$$t; done
+
+clean:
+	rm -f $(OBJ) $(BIN) $(TEST_BIN)
+
+.PHONY: all clean test
